@@ -15,17 +15,15 @@ SECRET_KEY = '\xca\x0c\x86\x04\x98@\x02b\x1b7\x8c\x88]\x1b\xd7"+\xe6px@\xc3#\\'
 
 # mysql config
 db_user = "tomato"
-db_passwd = "D024Ad41d8cd98f00b204"
-db_host = "114.215.186.147"
+db_passwd = ""
+db_host = "127.0.0.1"
 db_name = "tomato"
-db_port = 443
+db_port = 3306
 
 # redis config
 REDIS_CONFIG = {
-  # "host":  "192.168.80.81",
-  "host": "10.162.84.86",
+  "host":  "localhost",
   "port": 6379,
-  # "password": "scut2017",
   "password": "",
   "db": 1
 }

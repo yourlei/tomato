@@ -53,5 +53,3 @@ if __name__ == "__main__":
     "passwd": "tomat"
   }
   res = handler.login(**body)
-
-  print(res, '/////////////')

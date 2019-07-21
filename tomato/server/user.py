@@ -97,52 +97,6 @@ class UserService:
     db.session.commit()
 
     return output_json(code=0)
-  
-  # def update(self, user_id: str, **kwagrs):
-  #   """编辑用户信息
-  #   Args:
-  #     user_id: string, id字符加密串
-  #     kwagrs: object, 编辑的字段
-  #       - name: string
-  #       - password: string
-  #       - email: string
-  #       - role_id: int
-  #   """
-  #   id_encrypt = IdEncrypt()
-  #   user_id = id_encrypt.decode_id(user_id)
-
-  #   query = User.query
-  #   allow_field = ["name", "email", "password", "role_id"]
-
-  #   for key in kwagrs:
-  #     if key not in allow_field:
-  #       return output_json(None, None, code=ErrCode.NOT_ALLOW, message=ErrMap[ErrCode.NOT_ALLOW])
-    
-  #   exist = None
-  #   if kwagrs.get("name"):
-  #     exist = query\
-  #       .filter(User.name==kwagrs.get("name"), User.deleted_at==DELETED_AT, User.id != user_id)\
-  #       .first()
-    
-  #   if kwagrs.get("email"):
-  #     exist = query\
-  #       .filter(User.email==kwagrs.get("email"), User.deleted_at==DELETED_AT, User.id != user_id)\
-  #       .first()
-
-  #   if exist is not None:
-  #     return output_json(None, None, code=ErrCode.EXIST_DATA, message=ErrMap[ErrCode.EXIST_DATA])
-
-  #   if kwagrs.get("password"):
-  #     kwagrs["password"] = encrypt(kwagrs["password"])
-
-  #   role_id = kwagrs.get("role_id")
-  #   if role_id and isinstance(role_id, str):
-  #     kwagrs["role_id"] = id_encrypt.decode_id(role_id)
-
-  #   query.filter_by(id=user_id).update(kwagrs)
-  #   db.session.commit()
-
-  #   return output_json(None, None, code=0, message="")
 
   def changePasswd(self, user_id: str, **kwagrs):
     """修改密码
@@ -152,15 +106,6 @@ class UserService:
         - password: string, 新密码
         - old_password: string, 旧密码
     """
-    # _redis = RedisPool()
-    # user_id = _redis.hget(user_id, "id")
-    
-    # if user_id is None:
-    #   return output_json(None, None, code=ErrCode.NO_AUTH, message=ErrMap[ErrCode.NO_AUTH])
-    
-    # id_encrypt = IdEncrypt()
-    # user_id = id_encrypt.decode_id(user_id)
-
     allow_field = ["password", "old_password"]
     for key in kwagrs:
       if key not in allow_field:
