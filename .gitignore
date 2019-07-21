@@ -1,0 +1,19 @@
+.vscode
+__pycache__/
+
+# package
+dist/
+wheels/
+*.egg-info/
+*.egg
+
+# log
+logs/
+*.log
+
+*.swp
+
+# jpg/png
+*.jpg
+*.jpeg
+*.png

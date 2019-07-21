@@ -6,7 +6,6 @@ import logging
 from flask import Flask
 from flask_cors import CORS
 from .setting import DBConfig
-from .utils.utils import output_json
 
 """创建Flask实例"""
 app = Flask(__name__, static_folder='../static')

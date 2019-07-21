@@ -4,7 +4,7 @@
 
 from flask_script import Manager 
 from flask_migrate import Migrate, MigrateCommand
-from pintu.app import app
+from tomato.app import app
 from .model import db
 
 manager = Manager(app)

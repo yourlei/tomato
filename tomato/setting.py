@@ -14,10 +14,10 @@ DEBUG = True # False
 SECRET_KEY = '\xca\x0c\x86\x04\x98@\x02b\x1b7\x8c\x88]\x1b\xd7"+\xe6px@\xc3#\\'
 
 # mysql config
-db_user = "hemayou"
-db_passwd = "hemayou"
+db_user = "tomato"
+db_passwd = "D024Ad41d8cd98f00b204"
 db_host = "114.215.186.147"
-db_name = "hemayou"
+db_name = "tomato"
 db_port = 443
 
 # redis config
@@ -38,9 +38,6 @@ LOGGING_LEVEL = 'INFO'
 class DBConfig:
   """数据库配置"""
   URI = 'mysql+pymysql://%s:%s@%s:%s/%s?charset=utf8' % (db_user, db_passwd, db_host, db_port, db_name)
-  # 用这两个会导致：'numpy.float64' object has no attribute 'translate'
-  # URI = 'mysql+mysqlconnector://%s:%s@%s/%s?charset=utf8' % (db_user, db_passwd, db_host, db_name)
-  # URI = 'mysql+mysqlconnector://%s:%s@%s/%s?charset=utf8' % (db_user, db_passwd, db_host, db_name)
   TB_PREFIX = 'tomato_'  # 表名前缀
   DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
@@ -50,4 +47,5 @@ TestConfig = {
   "header": {}
 }
 
+api_version = "/api/v1"
 STATICPATH = "static/captcha/"
