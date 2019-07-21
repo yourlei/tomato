@@ -30,6 +30,8 @@ REDIS_CONFIG = {
   "db": 1
 }
 
+JWT_SECRET = "example"
+
 EXPIRED_TIME = 1 * 30 * 60
 # 日志记录等级
 LOGGING_LEVEL = 'INFO'

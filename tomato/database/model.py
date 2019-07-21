@@ -53,7 +53,8 @@ class User(db.Model):
   updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
   deleted_at = db.Column(db.DateTime, default=deleted_at)
   
-  def __init__(self, name, email, password, role_id):
+  def __init__(self, id, name, email, password, role_id):
+    self.id = id
     self.name = name
     self.email = email
     self.password = password
