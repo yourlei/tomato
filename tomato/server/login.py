@@ -4,9 +4,13 @@
 import re
 import jwt
 from tomato.setting import JWT_SECRET
-from tomato.database.model import db, User
+from tomato.database.model import db
+from tomato.database.model import User
 from tomato.utils.errCode import ErrCode
-from tomato.utils.utils import DELETED_AT, output_json, utc_timestamp, decrypt
+from tomato.utils.utils import decrypt
+from tomato.utils.utils import DELETED_AT
+from tomato.utils.utils import output_json
+from tomato.utils.utils import utc_timestamp
 
 class LoginService():
   def login(self, **kwargs: object):

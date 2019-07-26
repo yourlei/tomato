@@ -3,8 +3,15 @@
 from datetime import datetime
 
 from tomato.utils.errCode import ErrCode
-from tomato.database.model import db, User, Role, DBConfig
-from tomato.utils.utils import DELETED_AT, output_json, encrypt, decrypt, md5_id
+from tomato.database.model import db
+from tomato.database.model import User
+from tomato.database.model import Role
+from tomato.database.model import DBConfig
+from tomato.utils.utils import DELETED_AT
+from tomato.utils.utils import md5_id
+from tomato.utils.utils import decrypt
+from tomato.utils.utils import encrypt
+from tomato.utils.utils import output_json
 
 class UserService:
   def create(self, user: User):

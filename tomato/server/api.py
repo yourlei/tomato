@@ -3,5 +3,10 @@
 
 from tomato.app import app
 
+@app.handle_exception
+def handle_error():
+    pass
 
-
+@app.before_request
+def token_auth():
+    pass
