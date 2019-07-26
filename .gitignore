@@ -7,6 +7,9 @@ wheels/
 *.egg-info/
 *.egg
 
+# setting
+tomato/setting.py
+
 # log
 logs/
 *.log
