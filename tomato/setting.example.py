@@ -13,9 +13,7 @@ DEBUG = True # False
 # flask密钥
 SECRET_KEY = '\xca\x0c\x86\x04\x98@\x02b\x1b7\x8c\x88]\x1b\xd7"+\xe6px@\xc3#\\'
 
-"""
-数据库配置
-"""
+"""数据库配置"""
 db_user = "tomato"
 db_passwd = "tomato"
 db_host = "127.0.0.1"

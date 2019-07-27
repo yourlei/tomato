@@ -4,6 +4,7 @@
 import re
 import jwt
 from tomato.setting import JWT_SECRET
+from tomato.setting import EXPIRED_TIME
 from tomato.database.model import db
 from tomato.database.model import User
 from tomato.utils.errCode import ErrCode
@@ -35,7 +36,7 @@ class LoginService():
     payload =  {
       # 'iss': 'yourlin127@gmail.com',
       "id": user["id"],
-      'exp': utc_timestamp() + 3600,
+      'exp': utc_timestamp() + EXPIRED_TIME,
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
@@ -54,6 +55,6 @@ if __name__ == "__main__":
   handler = LoginService()
   body = {
     "account": "tomato",
-    "passwd": "tomat"
+    "passwd": "tomato"
   }
   res = handler.login(**body)

@@ -4,8 +4,9 @@ flask_sqlalchemy
 flask_migrate
 flask_script
 pymysql
-redis
+# redis
 jsonschema
 pillow
 flask_cors
 bcrypt
+PyJWT

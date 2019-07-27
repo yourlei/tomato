@@ -5,4 +5,4 @@ sudo docker run -dti \
 -p 28095:8095 \
 -v $PWD:/var/www/tomato \
 -w /var/www/tomato \
-python:3.7-slim
+python:3.6-slim
