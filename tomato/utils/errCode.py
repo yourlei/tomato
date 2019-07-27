@@ -15,6 +15,7 @@ class ErrCode:
   ERR_PASSWD = 105 # 密码错误
   ERR_CODE   = 106 # 验证码不正确
   JWT_ERR    = 107 # 无效的token
+  LOGIN_ERR  = 108 # 无效的账户或密码
 
 ErrMap = {
   ErrCode.INNERERR:   u"系统错误",
@@ -25,5 +26,6 @@ ErrMap = {
   ErrCode.NO_DATA:    u"数据不存在",
   ErrCode.ERR_CODE:   u"验证码不正确",
   ErrCode.NO_AUTH:    u"未授权",
-  ErrCode.JWT_ERR:    u"无效的token"
+  ErrCode.JWT_ERR:    u"无效的token",
+  ErrCode.LOGIN_ERR:  u"无效的账户或密码"
 }

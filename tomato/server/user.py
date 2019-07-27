@@ -2,11 +2,11 @@
 # 用户管理
 from datetime import datetime
 
+from tomato.setting import DBConfig
 from tomato.utils.errCode import ErrCode
 from tomato.database.model import db
 from tomato.database.model import User
 from tomato.database.model import Role
-from tomato.database.model import DBConfig
 from tomato.utils.utils import DELETED_AT
 from tomato.utils.utils import md5_id
 from tomato.utils.utils import decrypt
@@ -54,14 +54,13 @@ class UserService:
       created_time = where.get("created_at")
       query = query.filter(User.created_at.between(created_time[0], created_time[1]))
 
-
     query = query.filter(User.role_id == Role.id). \
       filter_by(deleted_at=DELETED_AT)
     
     count = query.count()
     offset = offset * limit
     rows = query.offset(offset).limit(limit).all()
-
+    
     # 转为字典数组
     result = []
     for item in rows:
@@ -82,7 +81,6 @@ class UserService:
     Args:
       id: string, 用户ID
     """
-
     user = User.query.filter(User.id==id, User.deleted_at==DELETED_AT).first()
     if user is None:
       return output_json(code=ErrCode.NO_DATA)
@@ -113,21 +111,16 @@ class UserService:
         - password: string, 新密码
         - old_password: string, 旧密码
     """
-    allow_field = ["password", "old_password"]
-    for key in kwagrs:
-      if key not in allow_field:
-        return output_json(code=ErrCode.NOT_ALLOW)
-    
     row = User.query.filter(User.id==user_id, User.deleted_at==DELETED_AT).first()
     if row is None:
       return output_json(code=ErrCode.NO_DATA)
 
     row = row.to_dict()
-    if not decrypt(kwagrs.get("old_password"), bytes(row["password"], encoding = "utf8")):
+    if not decrypt(kwagrs.get("old_passwd"), bytes(row["password"], encoding = "utf8")):
       return output_json(code=ErrCode.ERR_PASSWD)
     
     User.query.filter_by(id=user_id).update({
-      "password": encrypt(kwagrs["password"])
+      "password": encrypt(kwagrs["new_passwd"])
     })
     db.session.commit()
 
@@ -136,10 +129,12 @@ class UserService:
 if __name__ == "__main__":
   user = UserService()
 
-  user.create(User(
-    id=md5_id(),
-    name="tomato",
-    email="tomato@qq.com",
-    password="tomato",
-    role_id="20459894aee58f78"
-  ))
+  # user.create(User(
+  #   id=md5_id(),
+  #   name="tomato",
+  #   email="tomato@qq.com",
+  #   password="tomato",
+  #   role_id="20459894aee58f78"
+  # ))
+  res = user.list(where={})
+  print(res)

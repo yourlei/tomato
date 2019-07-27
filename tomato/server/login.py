@@ -5,7 +5,6 @@ import re
 import jwt
 from tomato.setting import JWT_SECRET
 from tomato.setting import EXPIRED_TIME
-from tomato.database.model import db
 from tomato.database.model import User
 from tomato.utils.errCode import ErrCode
 from tomato.utils.utils import decrypt
@@ -27,11 +26,11 @@ class LoginService():
       user = query.filter(User.name==account, User.deleted_at==DELETED_AT).first()
     # 用户不存在
     if user is None:
-      return output_json(code=ErrCode.NO_DATA)
+      return output_json(code=ErrCode.LOGIN_ERR)
     user = user.to_dict()
     # 密码错误
     if not decrypt(passwd, bytes(user["password"], encoding="utf-8")):
-      return output_json(code=ErrCode.ERR_PASSWD)
+      return output_json(code=ErrCode.LOGIN_ERR)
 
     payload =  {
       # 'iss': 'yourlin127@gmail.com',
@@ -44,7 +43,7 @@ class LoginService():
       "id": user["id"],
       "name": user["name"],
       "email": user["email"],
-      "token": token
+      "token": bytes.decode(token)
     }
 
     return output_json(data=res, code=0)
