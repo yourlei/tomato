@@ -1,6 +1,5 @@
 # coding: utf-8
 # 登录模块API
-
 from flask import request
 from flask import Blueprint
 from jsonschema import validate

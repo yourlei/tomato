@@ -36,4 +36,4 @@ handler.setFormatter(logging_format)
 app.logger.addHandler(handler)
 
 if __name__ == "__main__":
-  print(app.config)
+    print(app.config)

@@ -13,47 +13,45 @@ from tomato.utils.utils import output_json
 from tomato.utils.utils import utc_timestamp
 
 class LoginService():
-  def login(self, **kwargs: object):
-    """ 登录 """
-    account = kwargs.get("account")
-    passwd = kwargs.get("passwd")
+    def login(self, **kwargs: object):
+        """ 登录 """
+        account = kwargs.get("account")
+        passwd = kwargs.get("passwd")
 
-    query = User.query
-    # 邮箱或账户名登录
-    if re.search(r'@', account):
-      user = query.filter(User.email==account, User.deleted_at==DELETED_AT).first()
-    else:
-      user = query.filter(User.name==account, User.deleted_at==DELETED_AT).first()
-    # 用户不存在
-    if user is None:
-      return output_json(code=ErrCode.LOGIN_ERR)
-    user = user.to_dict()
-    # 密码错误
-    if not decrypt(passwd, bytes(user["password"], encoding="utf-8")):
-      return output_json(code=ErrCode.LOGIN_ERR)
+        query = User.query
+        # 邮箱或账户名登录
+        if re.search(r'@', account):
+            user = query.filter(User.email==account, User.deleted_at==DELETED_AT).first()
+        else:
+            user = query.filter(User.name==account, User.deleted_at==DELETED_AT).first()
+        # 用户不存在
+        if user is None:
+            return output_json(code=ErrCode.LOGIN_ERR)
+        user = user.to_dict()
+        # 密码错误
+        if not decrypt(passwd, bytes(user["password"], encoding="utf-8")):
+            return output_json(code=ErrCode.LOGIN_ERR)
 
-    payload =  {
-      # 'iss': 'yourlin127@gmail.com',
-      "id": user["id"],
-      'exp': utc_timestamp() + EXPIRED_TIME,
-    }
-    token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
+        payload =  {
+            # 'iss': 'yourlin127@gmail.com',
+            "id": user["id"],
+            'exp': utc_timestamp() + EXPIRED_TIME,
+        }
+        token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
-    res = {
-      "id": user["id"],
-      "name": user["name"],
-      "email": user["email"],
-      "token": bytes.decode(token)
-    }
+        res = {
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"],
+            "token": bytes.decode(token)
+        }
 
-    return output_json(data=res, code=0)
+        return output_json(data=res, code=0)
 
 if __name__ == "__main__":
-  # jwt_message = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqZWZmIiwiZXhwIjoxNTYzNzA1NTk3LCJjbGFpbSI6Imluc2FuaXR5In0.1E3p0xPh5pLTMkuAdKpsGL6KTx7ZxR136ZOj6I63LeA'
-  # decoded_payload = jwt.decode(jwt_message, "youme")
-  handler = LoginService()
-  body = {
-    "account": "tomato",
-    "passwd": "tomato"
-  }
-  res = handler.login(**body)
+    handler = LoginService()
+    body = {
+        "account": "tomato",
+        "passwd": "tomato"
+    }
+    res = handler.login(**body)

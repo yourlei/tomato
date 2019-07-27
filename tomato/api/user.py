@@ -15,7 +15,7 @@ passwd_schema = {
     "properties": {
         "old_passwd": {
             "type": "string",
-            # "minLength": 6
+            "minLength": 6
         },
         "new_passwd": {
             "type": "string",
