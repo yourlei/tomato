@@ -31,6 +31,22 @@ class UserService:
             return output_json(code=ErrCode.EXIST_DATA)
         
         return output_json(code=0)
+    def update(self, user_id: str, user: object):
+        """更新用户信息"""
+        allow_field = ["name", "email", "role_id"]
+        for key in user.keys():
+            if key not in allow_field:
+                return output_json(code=ErrCode.ERR_PARAMS)
+
+        query = User.query
+        exist = query.filter_by(id=user_id)
+
+        if not exist:
+            return output_json(code=ErrCode.NO_DATA)
+        # update
+        exist.update(user)
+        db.session.commit()
+        return output_json(code=0)
 
     def list(self, where: object, offset=0, limit=15):
         """查询用户列表
@@ -136,5 +152,6 @@ if __name__ == "__main__":
     #   password="tomato",
     #   role_id="20459894aee58f78"
     # ))
-    res = user.list(where={})
+    # res = user.list(where={})
+    user.update("80643aba3978c58e", {"name": "devp"})
     print(res)

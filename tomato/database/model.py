@@ -5,6 +5,7 @@ from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 from tomato.app import app
+from tomato.utils.utils import md5_id
 from tomato.setting import DBConfig
 
 db = SQLAlchemy(app)
@@ -53,8 +54,8 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
     deleted_at = db.Column(db.DateTime, default=deleted_at)
     
-    def __init__(self, id, name, email, password, role_id):
-        self.id = id
+    def __init__(self, name, email, password, role_id):
+        # self.id = md5_id()
         self.name = name
         self.email = email
         self.password = password
