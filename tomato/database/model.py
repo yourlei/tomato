@@ -101,9 +101,9 @@ class User(db.Model):
 #       "updated_at": self.updated_at.strftime(DATETIME_FORMAT)
 #     }
 
-class Role_Resoruce(db.Model):
+class Role_Relationship(db.Model):
     """角色资源关联表"""
-    __tablename__ = TB_PREFIX + "role_resource"
+    __tablename__ = TB_PREFIX + "role_relationship"
 
     id = db.Column(db.CHAR(16), primary_key=True, comment="主键")
     role_id = db.Column(db.CHAR(16), nullable=False, comment="角色ID")
@@ -157,20 +157,66 @@ class Article(db.Model):
 
     id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")
     title = db.Column(db.String(128), nullable=False, comment="标题")
-    author_id = db.Column(db.CHAR(16), db.ForeignKey("tomato_user.id"), nullable=False)
+    author  = db.Column(db.String(32), nullable=False, comment="作者")
     content = db.Column(db.Text, default="", comment="文章内容")
-    comments = db.relationship('Comments', backref=__tablename__, lazy=True)
+    cid = db.Column(db.CHAR(16), default="", comment="分类ID")
+    # comments = db.relationship('Comments', backref=__tablename__, lazy=True)
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
     deleted_at = db.Column(db.DateTime, default=deleted_at)
+
+    def __init__(self, title, author, content, cid):
+        self.title  = title
+        self.author = author
+        self.content = content
+        self.cid = cid
+
+    def to_dict(self):
+        return  {
+            "id": self.id,
+            "title": self.title,
+            "author": self.author,
+            "content": self.content,
+        }
+
+class Category(db.Model):
+    """分类表"""
+    __tablename__ = TB_PREFIX + "category"
+
+    id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")
+    name = db.Column(db.String(32), nullable=False, comment="类名")
+    created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
+    deleted_at = db.Column(db.DateTime, default=deleted_at)
+
+    def __init__(self, name):
+        self.name = name
 
 class Tag(db.Model):
     """标签表"""
     __tablename__ = TB_PREFIX + "tag"
 
     id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")
-    name = db.Column(db.String(32), nullable=False, comment="标签名")
+    name = db.Column(db.String(64), nullable=False, comment="标签名")
     # article_id = db.Column(db.init_app, db.ForeignKey("tomato_article.id"), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
+    deleted_at = db.Column(db.DateTime, default=deleted_at)
+
+    def __init__(self, name):
+        self.name = name
+
+class Tag_Relationship(db.Model):
+    """标签与文章关联表"""
+    __tablename__ = TB_PREFIX + "tag_relationship"
+
+    id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")    
+    tid = db.Column(db.CHAR(16), default="", nullable=False, comment="tag id")
+    aid = db.Column(db.CHAR(16), default="", nullable=False, comment="article id")
+
+    def __init__(self, tid, aid):
+        self.tid = tid
+        self.aid = aid
 
 class Comments(db.Model):
     """评论"""
