@@ -31,6 +31,7 @@ class UserService:
             return output_json(code=ErrCode.EXIST_DATA)
         
         return output_json(code=0)
+    
     def update(self, user_id: str, user: object):
         """更新用户信息"""
         allow_field = ["name", "email", "role_id"]
