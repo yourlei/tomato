@@ -15,7 +15,10 @@ from tomato.utils.utils import output_json
 
 class UserService:
     def create(self, user: User):
-        """创建用户""" 
+        """创建用户
+        Args:
+            user: class, User对象
+        """ 
         exist = User.query\
         .filter(db.or_(User.name==user.name, User.email==user.email))\
         .filter(User.deleted_at == DELETED_AT)\
@@ -33,7 +36,14 @@ class UserService:
         return output_json(code=0)
     
     def update(self, user_id: str, user: object):
-        """更新用户信息"""
+        """更新用户信息
+        Args:
+            user_id: string
+            user: object, User类更新属性(可选属性)
+                - name: string, 用户名
+                - email: string, 用户邮箱
+                - role_id: string, 用户所属角色ID
+        """
         allow_field = ["name", "email", "role_id"]
         for key in user.keys():
             if key not in allow_field:
@@ -52,9 +62,9 @@ class UserService:
     def list(self, where: object, offset=0, limit=15):
         """查询用户列表
         Args:
-        where:  object, 查询条件
-        offset: int, 分页
-        limit:  int, 页宽
+            where:  object, 查询条件
+            offset: int, 分页
+            limit:  int, 页宽
         """
         query = db.session.query(User.id, User.name, User.email, 
         User.created_at, User.updated_at, Role.name)
@@ -93,12 +103,12 @@ class UserService:
 
         return output_json(data=result, total=count)
   
-    def show(self, id: str):
+    def show(self, user_id: str):
         """用户详情
         Args:
-        id: string, 用户ID
+            user_id: string, 用户ID
         """
-        user = User.query.filter(User.id==id, User.deleted_at==DELETED_AT).first()
+        user = User.query.filter(User.id==user_id, User.deleted_at==DELETED_AT).first()
         if user is None:
             return output_json(code=ErrCode.NO_DATA)
         
@@ -109,13 +119,13 @@ class UserService:
     def destory(self, user_id: str):
         """删除用户
         Args:
-        user_id: string,
+            user_id: string,
         """
         user = User.query.filter(User.id==user_id, User.deleted_at==DELETED_AT).first()
         if user is None:
             return output_json(code=ErrCode.NO_DATA)
 
-        User.query.filter_by(id=user_id).update({"deleted_at": datetime.now()})
+        user.update({"deleted_at": datetime.now()})
         db.session.commit()
 
         return output_json(code=0)
@@ -123,10 +133,10 @@ class UserService:
     def changePasswd(self, user_id: str, **kwagrs):
         """修改密码
         Args:
-        user_id: string
-        kwagrs:
-            - new_passwd: string, 新密码
-            - old_passwd: string, 旧密码
+            user_id: string
+            kwagrs:
+                - new_passwd: string, 新密码
+                - old_passwd: string, 旧密码
         """
         row = User.query.filter(User.id==user_id, User.deleted_at==DELETED_AT).first()
         if row is None:
@@ -137,7 +147,7 @@ class UserService:
             return output_json(code=ErrCode.ERR_PASSWD)
         
         User.query.filter_by(id=user_id).update({
-        "password": encrypt(kwagrs["new_passwd"])
+            "password": encrypt(kwagrs["new_passwd"])
         })
         db.session.commit()
 

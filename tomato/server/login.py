@@ -14,7 +14,12 @@ from tomato.utils.utils import utc_timestamp
 
 class LoginService():
     def login(self, **kwargs: object):
-        """ 登录 """
+        """登录
+        Args:
+            kwargs: object
+                - account: string, 登录账户
+                - passwd:  string, 账户密码
+        """
         account = kwargs.get("account")
         passwd = kwargs.get("passwd")
 

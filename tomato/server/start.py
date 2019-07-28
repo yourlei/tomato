@@ -5,12 +5,15 @@ from tomato.api.api import app
 from tomato.setting import api_version
 from tomato.api.user import user_action
 from tomato.api.login import login_action
+from tomato.api.article import article_action
 
 def handle_url_prefix(url: str):
     return api_version + url
 
 app.register_blueprint(login_action, url_prefix=handle_url_prefix("/admin"))
 app.register_blueprint(user_action, url_prefix=handle_url_prefix("/admin"))
+app.register_blueprint(article_action, url_prefix=handle_url_prefix("/admin"))
+
 
 def run(debug=False, port=8095, host="0.0.0.0"):
     """ 启动服务 """

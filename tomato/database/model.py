@@ -162,7 +162,7 @@ class Article(db.Model):
     cid = db.Column(db.CHAR(16), default="", comment="分类ID")
     # comments = db.relationship('Comments', backref=__tablename__, lazy=True)
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
-    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
+    updated_at = db.Column(db.DateTime, onupdate=datetime.now, comment="更新时间")
     deleted_at = db.Column(db.DateTime, default=deleted_at)
 
     def __init__(self, title, author, content, cid):

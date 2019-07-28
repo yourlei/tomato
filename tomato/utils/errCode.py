@@ -2,11 +2,10 @@
 # 定义错误码
 
 class ErrCode:
-    # 正常返回
-    SUCCESS = 0
-    # 内部错误
-    INNERERR = 1
+    SUCCESS = 0 # 正常返回
+    INNERERR = 1 # 内部错误
     NO_AUTH  = 2 # 未授权
+    SERVER_ERR = 3 # 服务异常
     # 接口返回
     ERR_PARAMS = 101 # 参数错误
     EXIST_DATA = 102 # 数据已存在
@@ -19,6 +18,7 @@ class ErrCode:
 
 ErrMap = {
     ErrCode.INNERERR:   u"系统错误",
+    ErrCode.SERVER_ERR: u"服务异常",
     ErrCode.ERR_PARAMS: u"参数错误",
     ErrCode.EXIST_DATA: u"数据已存在",
     ErrCode.NOT_ALLOW:  u"字段错误",

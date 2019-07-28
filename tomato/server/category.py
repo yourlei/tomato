@@ -9,7 +9,10 @@ from tomato.utils.utils import output_json
 
 class CategoryService():
     def create(self, name: str):
-        """新增分类"""
+        """新增分类
+        Args:
+            name: string, 类名,值唯一
+        """
         exist = Category.query.filter(Category.name==name).first()
         if exist:
             return output_json(code=ErrCode.EXIST_DATA)
@@ -21,7 +24,11 @@ class CategoryService():
         return output_json(code=0)
 
     def update(self, id: str, kwargs: object):
-        """更新分类"""
+        """更新分类
+        Args:
+            id: string,
+            kwargs: object, 包含category属性的对象
+        """
         exist = Category.query.filter_by(id=id)
         if exist is None:
             return output_json(code=ErrCode.NO_DATA)
@@ -34,7 +41,12 @@ class CategoryService():
         return output_json(code=0)
 
     def list(self, where: object, offset=0, limit=15):
-        """查询分类列表"""
+        """查询分类列表
+        Args:
+            where: object, 查询对象
+            offset: int, 分页
+            limit:  int, 页长
+        """
         query = Category.query
         
         if where.get("name"):
@@ -50,7 +62,7 @@ class CategoryService():
 
 if __name__ == "__main__":
     from tomato.app import app
-    category = CategoryService()
     with app.app_context():
+        category = CategoryService()
         category.create("python")
         category.list({})
