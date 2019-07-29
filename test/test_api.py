@@ -29,6 +29,7 @@ class Test_tomato(unittest.TestCase):
         self.assertEqual(res["code"], 0, res["error"]["msg"])
 
     def test_user_create(self):
+        """创建用户"""
         data = {
             "name": "dev",
             "email": "dev@dev.com",
@@ -38,6 +39,9 @@ class Test_tomato(unittest.TestCase):
         url = host + "/admin/user"
         res = requests.post(url, json=data).json()
         self.assertEqual(res["code"], 0, res["error"]["msg"])
+
+    def test_article_create(self):
+        """发布文章"""
 
 if __name__ == "__main__":
     unittest.main()

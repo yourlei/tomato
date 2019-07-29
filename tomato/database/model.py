@@ -160,6 +160,7 @@ class Article(db.Model):
     author  = db.Column(db.String(32), nullable=False, comment="作者")
     content = db.Column(db.Text, default="", comment="文章内容")
     cid = db.Column(db.CHAR(16), default="", comment="分类ID")
+    status = db.Column(db.Integer, default=1, comment="文章状态1:已发布, 2:存为草稿")
     # comments = db.relationship('Comments', backref=__tablename__, lazy=True)
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, onupdate=datetime.now, comment="更新时间")
