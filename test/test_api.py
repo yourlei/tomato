@@ -42,6 +42,6 @@ class Test_tomato(unittest.TestCase):
 
     def test_article_create(self):
         """发布文章"""
-
+        pass
 if __name__ == "__main__":
     unittest.main()
