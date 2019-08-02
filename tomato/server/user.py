@@ -7,10 +7,10 @@ from tomato.utils.errCode import ErrCode
 from tomato.database.model import db
 from tomato.database.model import User
 from tomato.database.model import Role
-from tomato.utils.utils import DELETED_AT
 from tomato.utils.utils import md5_id
 from tomato.utils.utils import decrypt
 from tomato.utils.utils import encrypt
+from tomato.utils.utils import DELETED_AT
 from tomato.utils.utils import output_json
 
 class UserService:

@@ -2,7 +2,9 @@
 # 登录模块
 
 import re
+
 import jwt
+
 from tomato.setting import JWT_SECRET
 from tomato.setting import EXPIRED_TIME
 from tomato.database.model import User

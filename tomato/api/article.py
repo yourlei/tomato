@@ -5,6 +5,7 @@ from flask import json
 from flask import Blueprint
 from flask import request
 from jsonschema import validate
+
 from tomato.database.model import Article
 from tomato.utils.errCode import ErrCode
 from tomato.utils.utils import output_json

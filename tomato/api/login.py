@@ -3,6 +3,7 @@
 from flask import request
 from flask import Blueprint
 from jsonschema import validate
+
 from tomato.utils.errCode import ErrCode
 from tomato.utils.utils import output_json
 from tomato.server.login import LoginService

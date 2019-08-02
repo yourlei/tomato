@@ -3,10 +3,10 @@
 
 from datetime import datetime
 
-from flask_sqlalchemy import SQLAlchemy
 from tomato.app import app
-from tomato.utils.utils import md5_id
 from tomato.setting import DBConfig
+from tomato.utils.utils import md5_id
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy(app)
 
@@ -71,35 +71,6 @@ class User(db.Model):
             "created_at": self.created_at.strftime(DATETIME_FORMAT),
             "updated_at": self.updated_at.strftime(DATETIME_FORMAT)
         }
-
-# class Resource(db.Model):
-#   """资源表"""
-#   __tablename__ = TB_PREFIX + "resource"
-
-#   id = db.Column(db.Integer, primary_key=True, comment="主键")
-#   from_id = db.Column(db.Integer, comment="资源外键")
-#   name = db.Column(db.String(128), nullable=False, comment="资源名")
-#   classify = db.Column(db.Integer, nullable=False, comment="资源类别")
-#   remark = db.Column(db.String(256), nullable=True, comment="说明信息")
-#   created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
-#   updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
-#   deleted_at = db.Column(db.DateTime, default=deleted_at)
-
-#   def __init__(self, name, classify, remark=None, from_id=None):
-#     self.name = name
-#     self.classify = classify
-#     self.from_id = from_id
-#     self.remark = remark
-
-#   def to_dict(self, encrypt=True):
-#     return {
-#       "id": self.id if encrypt else self.id,
-#       "name": self.name,
-#       "classify": self.classify,
-#       "remark": self.remark,
-#       "created_at": self.created_at.strftime(DATETIME_FORMAT),
-#       "updated_at": self.updated_at.strftime(DATETIME_FORMAT)
-#     }
 
 class Role_Relationship(db.Model):
     """角色资源关联表"""

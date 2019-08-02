@@ -4,6 +4,7 @@
 from flask import request
 from flask import Blueprint
 from jsonschema import validate
+
 from tomato.database.model import User
 from tomato.server.user import UserService
 from tomato.utils.utils import output_json
