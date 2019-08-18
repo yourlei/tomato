@@ -50,9 +50,17 @@ class ArticleService():
         Args:
             id: string, 文章ID
             kwargs: object, 更新的属性
+              :title:  string
+              :status: int
         """
         row = Article.query.filter_by(Article.id==id, Article.deleted_at==DELETED_AT)
         
+        allowField = ["title", "status"]
+        # 检查更新字段
+        for key in kwargs.keys():
+            if key not in allowField:
+                return output_json(code=ErrCode.ERR_PARAMS)
+
         if row is None:
             return output_json(code=ErrCode.NO_DATA)
         try:
@@ -72,21 +80,23 @@ class ArticleService():
             limit:  int, 页长
         """
         # query = Article.query
-        query = db.session.query(Article.title, Article.author,\
+        query = db.session.query(Article.id, Article.title, Article.author,\
             Article.created_at)\
-            # .filter(Article.cid==Category.id)
+            .filter(Article.deleted_at==DELETED_AT)
 
         if where.get("title"):
             query = query.filter(Article.title.like("%" + where.get("title") + "%"))
 
         count = query.count()
         rows = query.offset(offset).limit(limit).all()
+        
         data = []
         for item in rows:
             data.append({
-                "title": item[0],
-                "author": item[1],
-                "created_at": item[2].strftime(DBConfig.DATETIME_FORMAT),
+                "id": item[0],
+                "title": item[1],
+                "author": item[2],
+                "created_at": item[3].strftime(DBConfig.DATETIME_FORMAT),
             })
             
         return output_json(data=data, code=0, total=count)
@@ -96,7 +106,7 @@ class ArticleService():
         Args:
             id: string, 文章ID
         """
-        row = Article.query.filter_by(Article.id==id, Article.deleted_at==DELETED_AT)
+        row = Article.query.filter_by(id=id)
         
         if row is None:
             return output_json(code=ErrCode.NO_DATA)

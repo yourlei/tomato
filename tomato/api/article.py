@@ -34,7 +34,7 @@ create_schema = {
     },
     "required": ["title", "author", "content", "uid"]
 }
-
+# 创建文章
 @article_action.route("/article", methods=["POST"])
 def create():
     body = request.json
@@ -66,3 +66,24 @@ def list():
     res = handler.list(where, offset, limit)
 
     return res
+
+@article_action.route("/article/<string:id>", methods=["PUT"])
+def update(id):
+    if id is None:
+        return output_json(code=ErrCode.ERR_PARAMS)
+    
+    body = request.json
+
+    handler = ArticleService()
+    res = handler.update(id, body)
+
+# 删除文章
+@article_action.route("/article/<string:id>", methods=["DELETE"])
+def delArticle(id):
+    if id is None:
+        return output_json(code=ErrCode.ERR_PARAMS)
+    handler = ArticleService()
+    res = handler.destory(id)
+
+    return res
+    
