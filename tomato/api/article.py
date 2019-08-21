@@ -27,12 +27,15 @@ create_schema = {
         "content": {
             "type": "string"
         },
-        "cid": {
-            "type": "string",
-            "minLength": 16
+        "status": {
+            "type": "integer"
         }
+        # "cid": {
+        #     "type": "string",
+        #     "minLength": 16
+        # }
     },
-    "required": ["title", "author", "content", "uid"]
+    "required": ["title", "author", "content"]
 }
 # 创建文章
 @article_action.route("/article", methods=["POST"])
@@ -45,7 +48,8 @@ def create():
         title=body["title"],
         author=body["author"],
         content=body["content"],
-        cid=body["cid"]
+        status=body["status"],
+        cid=body["cid"],
     ))
 
     return res

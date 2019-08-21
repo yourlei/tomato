@@ -137,10 +137,11 @@ class Article(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=datetime.now, comment="更新时间")
     deleted_at = db.Column(db.DateTime, default=deleted_at)
 
-    def __init__(self, title, author, content, cid):
+    def __init__(self, title, author, content, status, cid):
         self.title  = title
         self.author = author
         self.content = content
+        self.status = status
         self.cid = cid
 
     def to_dict(self):
