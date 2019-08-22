@@ -1,10 +1,7 @@
 # coding: utf-8
 # 登录模块
-
 import re
-
 import jwt
-
 from tomato.setting import JWT_SECRET
 from tomato.setting import EXPIRED_TIME
 from tomato.database.model import User
@@ -61,4 +58,4 @@ if __name__ == "__main__":
         "account": "tomato",
         "passwd": "tomato"
     }
-    res = handler.login(**body)
+    # res = handler.login(**body)

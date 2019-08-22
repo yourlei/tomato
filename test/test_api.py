@@ -43,5 +43,17 @@ class Test_tomato(unittest.TestCase):
     def test_article_create(self):
         """发布文章"""
         pass
+    
+    def test_article_index(self):
+        url = host + '/admin/article?query={"where":{"title": "linux"}}'
+        res = requests.get(url).json()
+        self.assertEqual(res["code"], 0, res["error"]["msg"])
+
+    def test_article_show(self):
+        """文章详情"""
+        url = host + "/admin/article/4682075a57b34813"
+        res = requests.get(url).json()
+        self.assertEqual(res["code"], 0, res["error"]["msg"])
+
 if __name__ == "__main__":
     unittest.main()

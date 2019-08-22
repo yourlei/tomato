@@ -2,10 +2,9 @@
 # 文章管理API
 
 from flask import json
-from flask import Blueprint
 from flask import request
+from flask import Blueprint
 from jsonschema import validate
-
 from tomato.database.model import Article
 from tomato.utils.errCode import ErrCode
 from tomato.utils.utils import output_json
@@ -37,9 +36,9 @@ create_schema = {
     },
     "required": ["title", "author", "content"]
 }
-# 创建文章
 @article_action.route("/article", methods=["POST"])
 def create():
+    """创建文章"""
     body = request.json
 
     validate(body, create_schema)
@@ -56,6 +55,7 @@ def create():
 
 @article_action.route("/article", methods=["GET"])
 def list():
+    """文章列表"""
     query = request.args.get("query")
 
     try:
@@ -71,8 +71,18 @@ def list():
 
     return res
 
+@article_action.route("/article/<string:id>", methods=["GET"])
+def show(id):
+    """文章详情"""
+    if id is None:
+        return output_json(code=ErrCode.ERR_PARAMS)
+    handler = ArticleService()
+    
+    return handler.show(id)
+
 @article_action.route("/article/<string:id>", methods=["PUT"])
 def update(id):
+    """编辑文章"""
     if id is None:
         return output_json(code=ErrCode.ERR_PARAMS)
     
@@ -81,9 +91,9 @@ def update(id):
     handler = ArticleService()
     res = handler.update(id, body)
 
-# 删除文章
 @article_action.route("/article/<string:id>", methods=["DELETE"])
 def delArticle(id):
+    """删除文章"""
     if id is None:
         return output_json(code=ErrCode.ERR_PARAMS)
     handler = ArticleService()
