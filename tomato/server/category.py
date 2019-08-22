@@ -1,6 +1,5 @@
 # coding: utf-8
 # 文章分类模块
-
 from tomato.database.model import db
 from tomato.database.model import Category
 from tomato.utils.errCode import ErrCode
@@ -18,8 +17,9 @@ class CategoryService():
             return output_json(code=ErrCode.EXIST_DATA)
         row = Category(name=name)
         row.id = md5_id()
-        db.session.add(row)
-        db.session.commit()
+
+        with db.auto_commit():
+            db.session.add(row)
 
         return output_json(code=0)
 
@@ -37,7 +37,9 @@ class CategoryService():
             if key not in allow_field:
                 return output_json(code=ErrCode.ERR_PARAMS)
         if hasattr(kwargs, "name"):
-            exist.update(kwargs)
+            with db.auto_commit():
+                exist.update(kwargs)
+
         return output_json(code=0)
 
     def list(self, where: object, offset=0, limit=15):

@@ -31,11 +31,10 @@ class SQLAlchemy(_SQLALchemy):
         except Exception as e:
             self.session.rollback()
             raise e
-            
-db = SQLAlchemy(app)
 
 TB_PREFIX = DBConfig.TB_PREFIX
 DATETIME_FORMAT = DBConfig.DATETIME_FORMAT
+db = SQLAlchemy(app)
 
 class Role(db.Model):
     """角色表"""
@@ -48,7 +47,7 @@ class Role(db.Model):
     tag  = db.Column(db.Integer, nullable=False, comment="角色类别")
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, default=datetime.now, comment="更新时间")
-    DELETED_AT = db.Column(db.DateTime, default=DELETED_AT)
+    deleted_at = db.Column(db.DateTime, default=DELETED_AT)
 
     def __init__(self, name, tag):
         self.name = name
@@ -74,7 +73,7 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False, comment="账户密码")
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
-    DELETED_AT = db.Column(db.DateTime, default=DELETED_AT)
+    deleted_at = db.Column(db.DateTime, default=DELETED_AT)
     
     def __init__(self, name, email, password, role_id):
         # self.id = md5_id()
@@ -104,7 +103,7 @@ class Role_Relationship(db.Model):
     from_id = db.Column(db.Integer, nullable=False, comment="区别资源类型,1菜单资源")
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
-    DELETED_AT = db.Column(db.DateTime, default=DELETED_AT)
+    deleted_at = db.Column(db.DateTime, default=DELETED_AT)
 
     def __init__(self, role_id, resource_id):
         self.role_id = role_id
@@ -128,7 +127,7 @@ class Menu(db.Model):
     sort = db.Column(db.Integer, default=1, comment="菜单排序") 
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
-    DELETED_AT = db.Column(db.DateTime, default=DELETED_AT)
+    deleted_at = db.Column(db.DateTime, default=DELETED_AT)
     
     def __init__(self, name, url, sort):
         self.name = name
@@ -157,7 +156,7 @@ class Article(db.Model):
     # comments = db.relationship('Comments', backref=__tablename__, lazy=True)
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, onupdate=datetime.now, comment="更新时间")
-    DELETED_AT = db.Column(db.DateTime, default=DELETED_AT)
+    deleted_at = db.Column(db.DateTime, default=DELETED_AT)
 
     def __init__(self, title, author, content, status, cid):
         self.title  = title
@@ -182,7 +181,7 @@ class Category(db.Model):
     name = db.Column(db.String(32), nullable=False, comment="类名")
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
-    DELETED_AT = db.Column(db.DateTime, default=DELETED_AT)
+    deleted_at = db.Column(db.DateTime, default=DELETED_AT)
 
     def __init__(self, name):
         self.name = name
@@ -202,7 +201,7 @@ class Tag(db.Model):
     # article_id = db.Column(db.init_app, db.ForeignKey("tomato_article.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
-    DELETED_AT = db.Column(db.DateTime, default=DELETED_AT)
+    deleted_at = db.Column(db.DateTime, default=DELETED_AT)
 
     def __init__(self, name):
         self.name = name

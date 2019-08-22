@@ -1,6 +1,5 @@
 # coding: utf-8
 # 文章管理模块
-
 import traceback
 from datetime import datetime
 from tomato.setting import DBConfig
@@ -27,8 +26,8 @@ class ArticleService():
             return output_json(code=ErrCode.EXIST_DATA)
 
         article.id = md5_id()
-        db.session.add(article)
-        db.session.commit()
+        with db.auto_commit():
+            db.session.add(article)
 
         return output_json(code=0)
     
@@ -59,15 +58,11 @@ class ArticleService():
         for key in kwargs.keys():
             if key not in allowField:
                 return output_json(code=ErrCode.ERR_PARAMS)
-
         if row is None:
             return output_json(code=ErrCode.NO_DATA)
-        try:
+
+        with db.auto_commit():
             row.update(kwargs)
-            db.session.commit()
-        except:
-            print(traceback.format_exc())
-            return output_json(code=ErrCode.SERVER_ERR)
 
         return  output_json(code=0)
     
@@ -78,7 +73,6 @@ class ArticleService():
             offset: int, 分页
             limit:  int, 页长
         """
-        # query = Article.query
         query = db.session.query(Article.id, Article.title, Article.author,\
             Article.created_at)\
             .filter(Article.deleted_at==DELETED_AT)
@@ -110,8 +104,8 @@ class ArticleService():
         if row is None:
             return output_json(code=ErrCode.NO_DATA)
 
-        row.update({"deleted_at": datetime.now()})
-        db.session.commit()
+        with db.auto_commit():
+            row.update({"deleted_at": datetime.now()})
 
         return output_json(code=0)
 
