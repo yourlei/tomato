@@ -3,7 +3,6 @@
 
 import traceback
 from datetime import datetime
-
 from tomato.setting import DBConfig
 from tomato.database.model import db
 from tomato.database.model import Article
