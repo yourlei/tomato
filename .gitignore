@@ -11,7 +11,7 @@ wheels/
 tomato/setting.py
 
 # log
-logs/
+logs/*.log
 *.log
 
 *.swp

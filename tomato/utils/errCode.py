@@ -6,6 +6,7 @@ class ErrCode:
     INNERERR = 1 # 内部错误
     NO_AUTH  = 2 # 未授权
     SERVER_ERR = 3 # 服务异常
+    HEADER_ERR = 4 # 请求头缺少参数
     # 接口返回
     ERR_PARAMS = 101 # 参数错误
     EXIST_DATA = 102 # 数据已存在
@@ -27,5 +28,6 @@ ErrMap = {
     ErrCode.ERR_CODE:   u"验证码不正确",
     ErrCode.NO_AUTH:    u"未授权",
     ErrCode.JWT_ERR:    u"无效的token",
-    ErrCode.LOGIN_ERR:  u"无效的账户或密码"
+    ErrCode.LOGIN_ERR:  u"无效的账户或密码",
+    ErrCode.HEADER_ERR: u"请求头缺少参数",
 }

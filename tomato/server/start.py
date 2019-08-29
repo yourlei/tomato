@@ -10,7 +10,7 @@ from tomato.api.article import article_action
 def handle_url_prefix(url: str):
     return api_version + url
 
-app.register_blueprint(login_action, url_prefix=handle_url_prefix("/admin"))
+app.register_blueprint(login_action, url_prefix=handle_url_prefix(""))
 app.register_blueprint(user_action, url_prefix=handle_url_prefix("/admin"))
 app.register_blueprint(article_action, url_prefix=handle_url_prefix("/admin"))
 

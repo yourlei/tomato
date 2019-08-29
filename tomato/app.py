@@ -2,10 +2,10 @@
 # 应用入口程序
 
 import logging
-
 from flask import Flask
 from flask_cors import CORS
-from .setting import DBConfig
+from tomato.setting import DBConfig
+from tomato.utils.journal import setup_logging
 
 """创建Flask实例"""
 app = Flask(__name__, static_folder='../static')
@@ -28,12 +28,13 @@ app.config['SQLALCHEMY_POOL_RECYCLE'] = 3  # 空闲连接自动回收时间
 app.config['SQLALCHEMY_MAX_OVERFLOW'] = 128  # 控制在连接池达到最大值后可以创建的连接数。
 
 # 配置日志
-handler = logging.FileHandler("my.log", encoding="UTF-8")
-handler.setLevel(logging.DEBUG)
-logging_format = logging.Formatter(
-    '%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(lineno)s - %(message)s')
-handler.setFormatter(logging_format)
-app.logger.addHandler(handler)
+setup_logging(app.config["LOGGING_LEVEL"])
+# handler = logging.FileHandler("my.log", encoding="UTF-8")
+# handler.setLevel(logging.DEBUG)
+# logging_format = logging.Formatter(
+#     '%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(lineno)s - %(message)s')
+# handler.setFormatter(logging_format)
+# app.logger.addHandler(handler)
 
 if __name__ == "__main__":
     print(app.config)

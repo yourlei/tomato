@@ -29,7 +29,7 @@ class ArticleService():
         with db.auto_commit():
             db.session.add(article)
 
-        return output_json(code=0)
+        return output_json(data={"id": article.id}, code=0)
     
     def show(self, id: str):
         """文章详情
@@ -53,7 +53,7 @@ class ArticleService():
         """
         row = Article.query.filter_by(Article.id==id, Article.deleted_at==DELETED_AT)
         
-        allowField = ["title", "status"]
+        allowField = ["title", "status", "content"]
         # 检查更新字段
         for key in kwargs.keys():
             if key not in allowField:
@@ -79,6 +79,9 @@ class ArticleService():
 
         if where.get("title"):
             query = query.filter(Article.title.like("%" + where.get("title") + "%"))
+
+        if where.get("author"):
+            query = query.filter(Article.author.like("%" + where.get("author") + "%"))
 
         count = query.count()
         rows = query.offset(offset).limit(limit).all()

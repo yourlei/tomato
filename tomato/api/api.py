@@ -1,9 +1,16 @@
 # coding: utf-8
 # api入口, 统一处理api请求装饰器
+import re
+import jwt
+from flask import request
 from tomato.app import app
 from tomato.utils.errCode import ErrCode
 from tomato.utils.utils  import output_json
 from jsonschema.exceptions import ValidationError
+
+@app.route("/", methods=["GET"])
+def home():
+    return "welcome to tomato"
 
 @app.errorhandler(ValidationError)
 def handle_bad_request(e):
@@ -13,3 +20,23 @@ def handle_bad_request(e):
 @app.errorhandler(Exception)
 def handle_inner_error(e):
     return output_json(code=ErrCode.INNERERR), 500
+
+@app.before_request
+def require_token():
+    """验证token"""
+    pathname = request.path
+    # 权限受控接口
+    if -1 != pathname.find("admin"):
+        headers = request.headers
+        origin = headers.get("Origin")
+        token = headers.get("Token")
+        
+        if token is None:
+            return output_json(code=ErrCode.HEADER_ERR)
+        # 验证token
+        try:
+            payload = jwt.decode(token, app.config["JWT_SECRET"], algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return output_json(code=ErrCode.NO_AUTH), 401
+        except jwt.InvalidTokenError:
+            return output_json(code=ErrCode.NO_AUTH), 401
