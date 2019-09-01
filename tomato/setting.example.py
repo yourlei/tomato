@@ -28,7 +28,7 @@ REDIS_CONFIG = {
   "db": 1
 }
 
-JWT_SECRET = "example"
+JWT_SECRET = "tomato"
 
 EXPIRED_TIME = 1 * 30 * 60
 # 日志记录等级
