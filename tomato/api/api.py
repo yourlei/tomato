@@ -16,6 +16,8 @@ def home():
 @app.errorhandler(ValidationError)
 def handle_bad_request(e):
     """处理全局异常参数请求"""
+    if app.config.get("DEBUG"):
+        print(traceback.format_exc())
     return output_json(code=ErrCode.ERR_PARAMS), 400
 
 @app.errorhandler(Exception)

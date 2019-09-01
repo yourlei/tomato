@@ -18,13 +18,13 @@ class ArticleService():
         Args:
             article: class, 文章对象
         """
-        query = Article.query
+        # query = Article.query
 
-        exist = query.filter(Article.title==article.title, Article.author_id==
-            article.author_id, Article.deleted_at==DELETED_AT)\
-            .first()
-        if exist:
-            return output_json(code=ErrCode.EXIST_DATA)
+        # exist = query.filter(Article.title==article.title, Article.author_id==
+        #     article.author_id, Article.deleted_at==DELETED_AT)\
+        #     .first()
+        # if exist:
+        #     return output_json(code=ErrCode.EXIST_DATA)
 
         article.id = md5_id()
         with db.auto_commit():
@@ -98,7 +98,7 @@ class ArticleService():
 
         count = query.count()
         rows = query.offset(offset).limit(limit).all()
-
+        
         data = []
         for item in rows:
             data.append({
@@ -135,4 +135,5 @@ if __name__ == "__main__":
         #     content="kljsjdfjdkjdkj",
         #     cid="6c25cd76877c2"
         # ))
-        res = article.list({"author": "toma"})
+        res = article.list({})
+        print(res)

@@ -158,12 +158,12 @@ class Article(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=datetime.now, comment="更新时间")
     deleted_at = db.Column(db.DateTime, default=DELETED_AT)
 
-    def __init__(self, title, author_id, content, status, cid):
+    def __init__(self, title, author_id, content, status):
         self.title  = title
-        self.author = author_id
+        self.author_id = author_id
         self.content = content
         self.status = status
-        self.cid = cid
+        # self.cid = cid
 
     def to_dict(self):
         return  {

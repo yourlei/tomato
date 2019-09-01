@@ -45,10 +45,10 @@ def create():
     handler = ArticleService()
     res = handler.create(Article(
         title=body["title"],
-        author=body["author_id"],
+        author_id=body["author_id"],
         content=body["content"],
         status=body["status"],
-        cid=body["cid"],
+        # cid=body["cid"],
     ))
 
     return res
