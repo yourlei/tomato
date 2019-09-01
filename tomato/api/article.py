@@ -19,7 +19,7 @@ create_schema = {
             "type": "string",
             "minLength": 2
         },
-        "author": {
+        "author_id": {
             "type": "string",
             "minLength": 1
         },
@@ -34,7 +34,7 @@ create_schema = {
         #     "minLength": 16
         # }
     },
-    "required": ["title", "author", "content"]
+    "required": ["title", "author_id", "content"]
 }
 @article_action.route("/article", methods=["POST"])
 def create():
@@ -45,7 +45,7 @@ def create():
     handler = ArticleService()
     res = handler.create(Article(
         title=body["title"],
-        author=body["author"],
+        author=body["author_id"],
         content=body["content"],
         status=body["status"],
         cid=body["cid"],
@@ -87,9 +87,11 @@ def update(id):
         return output_json(code=ErrCode.ERR_PARAMS)
     
     body = request.json
+    if body is None:
+        return output_json(code=ErrCode.ERR_PARAMS)
 
     handler = ArticleService()
-    res = handler.update(id, body)
+    return handler.update(id, body)
 
 @article_action.route("/article/<string:id>", methods=["DELETE"])
 def delArticle(id):

@@ -149,7 +149,7 @@ class Article(db.Model):
 
     id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")
     title = db.Column(db.String(128), nullable=False, comment="标题")
-    author  = db.Column(db.String(32), nullable=False, comment="作者")
+    author_id  = db.Column(db.String(16), nullable=False, comment="作者ID")
     content = db.Column(db.Text, default="", comment="文章内容")
     cid = db.Column(db.CHAR(16), default="", comment="分类ID")
     status = db.Column(db.Integer, default=1, comment="文章状态1:已发布, 2:存为草稿")
@@ -158,9 +158,9 @@ class Article(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=datetime.now, comment="更新时间")
     deleted_at = db.Column(db.DateTime, default=DELETED_AT)
 
-    def __init__(self, title, author, content, status, cid):
+    def __init__(self, title, author_id, content, status, cid):
         self.title  = title
-        self.author = author
+        self.author = author_id
         self.content = content
         self.status = status
         self.cid = cid
@@ -169,7 +169,7 @@ class Article(db.Model):
         return  {
             "id": self.id,
             "title": self.title,
-            "author": self.author,
+            # "author": self.author,
             "content": self.content,
         }
 

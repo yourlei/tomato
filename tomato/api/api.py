@@ -2,6 +2,7 @@
 # api入口, 统一处理api请求装饰器
 import re
 import jwt
+import traceback
 from flask import request
 from tomato.app import app
 from tomato.utils.errCode import ErrCode
@@ -19,6 +20,8 @@ def handle_bad_request(e):
 
 @app.errorhandler(Exception)
 def handle_inner_error(e):
+    if app.config.get("DEBUG"):
+        print(traceback.format_exc())
     return output_json(code=ErrCode.INNERERR), 500
 
 @app.before_request

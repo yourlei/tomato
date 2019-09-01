@@ -6,6 +6,7 @@ from tomato.setting import DBConfig
 from tomato.database.model import db
 from tomato.database.model import Article
 from tomato.database.model import Category
+from tomato.database.model import User
 from tomato.utils.utils import md5_id
 from tomato.utils.utils import DELETED_AT
 from tomato.utils.utils import output_json
@@ -19,8 +20,8 @@ class ArticleService():
         """
         query = Article.query
 
-        exist = query.filter(Article.title==article.title, Article.author==
-            article.author, Article.deleted_at==DELETED_AT)\
+        exist = query.filter(Article.title==article.title, Article.author_id==
+            article.author_id, Article.deleted_at==DELETED_AT)\
             .first()
         if exist:
             return output_json(code=ErrCode.EXIST_DATA)
@@ -36,12 +37,23 @@ class ArticleService():
         Args:
             id: string, 文章ID
         """
-        row = Article.query.filter(Article.id==id, Article.deleted_at==DELETED_AT)\
-            .first()
+        # row = Article.query().filter(Article.id==id, Article.deleted_at==DELETED_AT)\
+        #     .first()
+
+        row = db.session.query(Article.id, Article.title, User.name, Article.content)\
+                .filter(Article.author_id==User.id)\
+                .filter(Article.id==id, Article.deleted_at==DELETED_AT)\
+                .first()
+
         if row is None:
             return output_json(code=ErrCode.NO_DATA)
-        
-        return output_json(data=row.to_dict())
+        data = {
+            "id": row[0],
+            "title": row[1],
+            "author": row[2],
+            "content": row[3]
+        }
+        return output_json(data=data)
     
     def update(self, id: str, kwargs: object):
         """编辑文章
@@ -51,7 +63,7 @@ class ArticleService():
               :title:  string
               :status: int
         """
-        row = Article.query.filter_by(Article.id==id, Article.deleted_at==DELETED_AT)
+        row = Article.query.filter_by(id=id)
         
         allowField = ["title", "status", "content"]
         # 检查更新字段
@@ -73,19 +85,20 @@ class ArticleService():
             offset: int, 分页
             limit:  int, 页长
         """
-        query = db.session.query(Article.id, Article.title, Article.author,\
+        query = db.session.query(Article.id, Article.title, User.name,\
             Article.created_at)\
+            .filter(Article.author_id==User.id)\
             .filter(Article.deleted_at==DELETED_AT)
 
         if where.get("title"):
             query = query.filter(Article.title.like("%" + where.get("title") + "%"))
 
         if where.get("author"):
-            query = query.filter(Article.author.like("%" + where.get("author") + "%"))
+            query = query.filter(User.name.like("%" + where.get("author") + "%"))
 
         count = query.count()
         rows = query.offset(offset).limit(limit).all()
-        
+
         data = []
         for item in rows:
             data.append({
@@ -116,10 +129,10 @@ if __name__ == "__main__":
     from tomato.app import app
     with app.app_context():
         article = ArticleService()
-        article.create(Article(
-            title="linux防火墙",
-            author="leiyu",
-            content="kljsjdfjdkjdkj",
-            cid="6c25cd76877c2"
-        ))
-        article.list({})
+        # article.create(Article(
+        #     title="linux防火墙",
+        #     author="leiyu",
+        #     content="kljsjdfjdkjdkj",
+        #     cid="6c25cd76877c2"
+        # ))
+        res = article.list({"author": "toma"})
