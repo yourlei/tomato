@@ -21,14 +21,14 @@ def output_json(data=None, total=None, code=0, msg=None):
     if data:
         return jsonify(
             code=code,
-            error={"msg": msg},
+            msg=msg,
             data=data,
             total=total
         )
     
     return jsonify(
         code=code,
-        error={"msg": msg}
+        msg=msg
     )
 
 def md5(s: str):

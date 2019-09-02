@@ -30,7 +30,7 @@ class ArticleService():
         with db.auto_commit():
             db.session.add(article)
 
-        return output_json(data={"id": article.id}, code=0)
+        return output_json(data={"id": article.id, "title": article.title}, code=0)
     
     def show(self, id: str):
         """文章详情
@@ -74,7 +74,8 @@ class ArticleService():
             return output_json(code=ErrCode.NO_DATA)
 
         with db.auto_commit():
-            row.update(kwargs)
+            result = row.update(kwargs)
+            print(result, ".........")
 
         return  output_json(code=0)
     

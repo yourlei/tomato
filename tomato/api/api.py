@@ -24,7 +24,7 @@ def handle_bad_request(e):
 def handle_inner_error(e):
     if app.config.get("DEBUG"):
         print(traceback.format_exc())
-    return output_json(code=ErrCode.INNERERR), 500
+    return output_json(code=ErrCode.INNERERR), 200
 
 @app.before_request
 def require_token():
