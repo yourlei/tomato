@@ -63,6 +63,7 @@ class Role(db.Model):
         }
 
 class User(db.Model):
+
     """用户表"""
     __tablename__ = TB_PREFIX + "user"
 
@@ -192,30 +193,38 @@ class Category(db.Model):
             "name": self.name
         }
 
-class Tag(db.Model):
-    """标签表"""
-    __tablename__ = TB_PREFIX + "tag"
+# class Tag(db.Model):
+#     """标签表"""
+#     __tablename__ = TB_PREFIX + "tag"
 
-    id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")
-    name = db.Column(db.String(64), nullable=False, comment="标签名")
-    # article_id = db.Column(db.init_app, db.ForeignKey("tomato_article.id"), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
-    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
-    deleted_at = db.Column(db.DateTime, default=DELETED_AT)
+#     id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")
+#     name = db.Column(db.String(64), nullable=False, comment="标签名")
+#     # article_id = db.Column(db.init_app, db.ForeignKey("tomato_article.id"), nullable=False)
+#     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
+#     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
+#     deleted_at = db.Column(db.DateTime, default=DELETED_AT)
 
-    def __init__(self, name):
-        self.name = name
-
-class Tag_Relationship(db.Model):
+#     def __init__(self, name):
+#         self.name = name
+#
+class Category_Relationship(db.Model):
     """标签与文章关联表"""
-    __tablename__ = TB_PREFIX + "tag_relationship"
+    __tablename__ = TB_PREFIX + "category_relationship"
 
-    id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")    
-    tid = db.Column(db.CHAR(16), default="", nullable=False, comment="tag id")
+    __table_args__ = (
+        db.UniqueConstraint('cid', 'aid', name='uix_cid_aid'),
+        # db.Index('index_name', 'column', 'column'),
+    )
+
+    # id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")
+    id = db.Column(db.Integer, primary_key=True, comment="主键id")
+    cid = db.Column(db.CHAR(16), default="", nullable=False, comment="category id")
     aid = db.Column(db.CHAR(16), default="", nullable=False, comment="article id")
-
-    def __init__(self, tid, aid):
-        self.tid = tid
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
+    
+    def __init__(self, cid, aid):
+        # self.id = id
+        self.cid = cid
         self.aid = aid
 
 class Comments(db.Model):

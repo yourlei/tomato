@@ -157,11 +157,11 @@ class UserService:
 if __name__ == "__main__":
     from tomato.app import app
     user = UserService()
-    # with app.app_context():
-    #     user.create(User(
-    #         id=md5_id(),
-    #         name="tomato",
-    #         email="tomato@qq.com",
-    #         password="tomato",
-    #         role_id="20459894aee58f78"
-    #     ))
+    with app.app_context():
+        user.create(User(
+            # id=md5_id(),
+            name="orange",
+            email="orange@qq.com",
+            password="tomato123",
+            role_id="20459894aee58f78"
+        ))

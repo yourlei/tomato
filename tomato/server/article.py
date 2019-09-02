@@ -74,8 +74,7 @@ class ArticleService():
             return output_json(code=ErrCode.NO_DATA)
 
         with db.auto_commit():
-            result = row.update(kwargs)
-            print(result, ".........")
+            row.update(kwargs)
 
         return  output_json(code=0)
     
