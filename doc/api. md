@@ -44,3 +44,29 @@
 #### 4.3文章列表
 
 #### 4.4删除文章
+
+### 5.文章分类关系
+
+#### 5.1文章添加分类
+
+- method: post
+- url: domain/api/v1/admin/category/relation
+
+- body参数
+
+``` json
+{
+    "name": "分类名",
+    "aid": "文章id"
+}
+```
+
+- 返回结果
+
+``` json
+{
+    "code": 0,
+    "msg": ""
+}
+```
+

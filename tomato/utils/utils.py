@@ -9,7 +9,7 @@ from datetime import datetime
 from tomato.utils.errCode import ErrMap
 
 # 数据软删除标识
-DELETED_AT = ' 0000-01-01 00:00:00'
+DELETED_AT = '0000-01-01 00:00:00'
 
 def output_json(data=None, total=None, code=0, msg=None):
     """以json结构返回数据"""

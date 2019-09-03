@@ -221,7 +221,8 @@ class Category_Relationship(db.Model):
     cid = db.Column(db.CHAR(16), default="", nullable=False, comment="category id")
     aid = db.Column(db.CHAR(16), default="", nullable=False, comment="article id")
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
-    
+    deleted_at = db.Column(db.DateTime, default=DELETED_AT)
+
     def __init__(self, cid, aid):
         # self.id = id
         self.cid = cid

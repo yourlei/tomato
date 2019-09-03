@@ -1,6 +1,5 @@
 # coding: utf-8
 # 文章管理API
-
 from flask import json
 from flask import request
 from flask import Blueprint
