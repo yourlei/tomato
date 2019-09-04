@@ -3,10 +3,11 @@ requests
 flask_sqlalchemy
 flask_migrate
 flask_script
+flask_cors
 pymysql
 # redis
 jsonschema
 pillow
-flask_cors
 bcrypt
 PyJWT
+pycryptodome

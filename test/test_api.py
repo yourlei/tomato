@@ -64,6 +64,12 @@ class Test_tomato(unittest.TestCase):
         }
         res = requests.post(url, json=data).json()
         self.assertEqual(res["code"], 0, res["msg"])
+    
+    def test_rsa(self):
+        """获取rsa公钥"""
+        url = host + "/admin/rsa/publickey"
+        res = requests.get(url).json()
+        print(res, "==============")
 
 if __name__ == "__main__":
     unittest.main()

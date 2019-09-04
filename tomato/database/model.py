@@ -40,11 +40,11 @@ class Role(db.Model):
     """角色表"""
     __tablename__ = TB_PREFIX + "role"
     """
-    tag: 角色类型, 1管理员, 2开发者
+    tag: 角色类型, 1管理员, 2开发者, 3博主
     """
     id   = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")
     name = db.Column(db.String(64), nullable=False, comment="角色名称")
-    tag  = db.Column(db.Integer, nullable=False, comment="角色类别")
+    tag  = db.Column(db.Integer, nullable=False, default=3, comment="角色类别")
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, default=datetime.now, comment="更新时间")
     deleted_at = db.Column(db.DateTime, default=DELETED_AT)
@@ -188,20 +188,6 @@ class Category(db.Model):
             "name": self.name
         }
 
-# class Tag(db.Model):
-#     """标签表"""
-#     __tablename__ = TB_PREFIX + "tag"
-
-#     id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")
-#     name = db.Column(db.String(64), nullable=False, comment="标签名")
-#     # article_id = db.Column(db.init_app, db.ForeignKey("tomato_article.id"), nullable=False)
-#     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
-#     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
-#     deleted_at = db.Column(db.DateTime, default=DELETED_AT)
-
-#     def __init__(self, name):
-#         self.name = name
-#
 class Category_Relationship(db.Model):
     """标签与文章关联表"""
     __tablename__ = TB_PREFIX + "category_relationship"
