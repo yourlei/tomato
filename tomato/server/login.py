@@ -8,7 +8,6 @@ from tomato.database.model import User
 from tomato.utils.errCode import ErrCode
 from tomato.utils.utils import decrypt
 from tomato.utils.utils import DELETED_AT
-from tomato.utils.utils import output_json
 from tomato.utils.utils import utc_timestamp
 
 class LoginService():
@@ -17,7 +16,10 @@ class LoginService():
         Args:
             kwargs: object
                 - account: string, 登录账户
-                - passwd:  string, 账户密码
+                - passwd:  string, 登录密码
+        :return
+            code: int, 错误码
+            data: dict, 登录成功返回的用户信息
         """
         account = kwargs.get("account")
         passwd = kwargs.get("passwd")
@@ -30,15 +32,17 @@ class LoginService():
             user = query.filter(User.name==account, User.deleted_at==DELETED_AT).first()
         # 用户不存在
         if user is None:
-            return output_json(code=ErrCode.LOGIN_ERR)
+            return ErrCode.LOGIN_ERR, None
+
         user = user.to_dict()
         # 密码错误
         if not decrypt(passwd, bytes(user["password"], encoding="utf-8")):
-            return output_json(code=ErrCode.LOGIN_ERR)
+            return ErrCode.LOGIN_ERR, None
 
         payload =  {
             # 'iss': 'yourlin127@gmail.com',
             "id": user["id"],
+            "role_id": user["role_id"],
             'exp': utc_timestamp() + EXPIRED_TIME,
         }
         token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
@@ -50,7 +54,7 @@ class LoginService():
             "token": bytes.decode(token)
         }
 
-        return output_json(data=res, code=0)
+        return 0, res
 
 if __name__ == "__main__":
     handler = LoginService()

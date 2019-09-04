@@ -9,7 +9,6 @@ from tomato.utils.utils import md5_id
 from tomato.utils.utils import decrypt
 from tomato.utils.utils import encrypt
 from tomato.utils.utils import DELETED_AT
-from tomato.utils.utils import output_json
 from tomato.utils.errCode import ErrCode
 
 class UserService:
@@ -17,6 +16,8 @@ class UserService:
         """创建用户
         Args:
             user: class, User对象
+        :return
+            bool, 创建成功返回True, 否则False
         """ 
         # 检查用户名, 邮箱是否已存在
         exist = User.query\
@@ -32,9 +33,9 @@ class UserService:
             with db.auto_commit():
                 db.session.add(user)
         else:
-            return output_json(code=ErrCode.EXIST_DATA)
+            return ErrCode.EXIST_DATA
         
-        return output_json(code=0)
+        return ErrCode.SUCCESS
     
     def update(self, user_id: str, user: object):
         """更新用户信息
@@ -45,20 +46,16 @@ class UserService:
                 - email: string, 用户邮箱
                 - role_id: string, 用户所属角色ID
         """
-        allow_field = ["name", "email", "role_id"]
-        for key in user.keys():
-            if key not in allow_field:
-                return output_json(code=ErrCode.ERR_PARAMS)
-
         query = User.query
         exist = query.filter_by(id=user_id)
 
         if not exist:
-            return output_json(code=ErrCode.NO_DATA)
+            return ErrCode.NO_DATA
         # update
-        exist.update(user)
-        db.session.commit()
-        return output_json(code=0)
+        with db.auto_commit():
+            exist.update(user)
+        
+        return ErrCode.SUCCESS
 
     def list(self, where: object, offset=0, limit=15):
         """查询用户列表
@@ -90,7 +87,7 @@ class UserService:
         rows = query.offset(offset).limit(limit).all()
         
         # 转为字典数组
-        result = []
+        data = []
         for item in rows:
             obj = {
                 "id": item[0],
@@ -100,9 +97,9 @@ class UserService:
                 "updated_at": item[4].strftime(DBConfig.DATETIME_FORMAT),
                 "role_name": item[5]
             }
-            result.append(obj)
+            data.append(obj)
 
-        return output_json(data=result, total=count)
+        return data, count
   
     def show(self, user_id: str):
         """用户详情
@@ -111,11 +108,11 @@ class UserService:
         """
         user = User.query.filter(User.id==user_id, User.deleted_at==DELETED_AT).first()
         if user is None:
-            return output_json(code=ErrCode.NO_DATA)
+            return False, None
         
         user = user.to_dict()
         del user["password"]
-        return output_json(data=user, total=1, code=0)
+        return True, user
 
     def destory(self, user_id: str):
         """删除用户
@@ -124,12 +121,12 @@ class UserService:
         """
         user = User.query.filter(User.id==user_id, User.deleted_at==DELETED_AT).first()
         if user is None:
-            return output_json(code=ErrCode.NO_DATA)
+            return False
 
         with db.auto_commit():
             user.update({"deleted_at": datetime.now()})
 
-        return output_json(code=0)
+        return True
 
     def changePasswd(self, user_id: str, **kwagrs):
         """修改密码
@@ -141,18 +138,18 @@ class UserService:
         """
         row = User.query.filter(User.id==user_id, User.deleted_at==DELETED_AT).first()
         if row is None:
-            return output_json(code=ErrCode.NO_DATA)
+            return ErrCode.NO_DATA
 
         row = row.to_dict()
         if not decrypt(kwagrs.get("old_passwd"), bytes(row["password"], encoding="utf8")):
-            return output_json(code=ErrCode.ERR_PASSWD)
+            return ErrCode.ERR_PASSWD
         
         with db.auto_commit():
             User.query.filter_by(id=user_id).update({
                 "password": encrypt(kwagrs["new_passwd"])
             })
         
-        return output_json(code=0)
+        return ErrCode.SUCCESS
 
 if __name__ == "__main__":
     from tomato.app import app

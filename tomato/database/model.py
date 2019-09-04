@@ -63,7 +63,6 @@ class Role(db.Model):
         }
 
 class User(db.Model):
-
     """用户表"""
     __tablename__ = TB_PREFIX + "user"
 
@@ -74,10 +73,9 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False, comment="账户密码")
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment="更新时间")
-    deleted_at = db.Column(db.DateTime, default=DELETED_AT)
+    deleted_at = db.Column(db.DateTime, default=DELETED_AT, comment="软删除标志位")
     
     def __init__(self, name, email, password, role_id):
-        # self.id = md5_id()
         self.name = name
         self.email = email
         self.password = password
@@ -168,7 +166,6 @@ class Article(db.Model):
         return  {
             "id": self.id,
             "title": self.title,
-            # "author": self.author,
             "content": self.content,
         }
 
@@ -214,7 +211,7 @@ class Category_Relationship(db.Model):
         db.UniqueConstraint('cid', 'aid', name='uix_cid_aid'),
         # db.Index('index_name', 'column', 'column'),
     )
-    
+
     id = db.Column(db.Integer, primary_key=True, comment="主键id")
     cid = db.Column(db.CHAR(16), default="", nullable=False, comment="category id")
     aid = db.Column(db.CHAR(16), default="", nullable=False, comment="article id")

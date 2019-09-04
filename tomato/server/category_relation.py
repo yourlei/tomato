@@ -1,17 +1,16 @@
 # coding: utf-8
-# 建立文章与分类标签关系
+# 文章与分类模块
 from datetime import datetime
 from tomato.database.model import db
-from tomato.database.model import DATETIME_FORMAT
 from tomato.database.model import Article
 from tomato.database.model import Category
+from tomato.database.model import DATETIME_FORMAT
 from tomato.database.model import Category_Relationship
 from tomato.utils.utils import md5_id
-from tomato.utils.utils import output_json
-from tomato.utils.errCode import ErrCode
+from tomato.utils.utils import DELETED_AT
 
 class CategoryRelation():
-    def bindCategory(self, name: str, aid: str):
+    def bindCategory(self, name: str, aid: str) -> bool:
         """文章添加到某个分类
         Args:
             name: string, 分类名
@@ -47,7 +46,7 @@ class CategoryRelation():
         
         return True
     
-    def unbindCategory(self, name: str, aid: str):
+    def unbindCategory(self, name: str, aid: str) -> bool:
         """解绑文章与分类关系
         Args:
             name: string, 分类名
@@ -78,7 +77,7 @@ class CategoryRelation():
         """
         rows = Category_Relationship.query\
             .with_entities(Category_Relationship.cid)\
-            .filter(Category_Relationship.aid==aid)\
+            .filter(Category_Relationship.aid==aid, Category_Relationship.deleted_at==DELETED_AT)\
             .all()
         
         data = []

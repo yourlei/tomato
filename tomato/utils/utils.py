@@ -48,7 +48,7 @@ def encrypt(passwd: str):
     return bcrypt.hashpw(bytes(passwd, encoding = "utf8"), bcrypt.gensalt(10))
 
 def decrypt(passwd: str, hashed: str) -> bool:
-    """校验明文"""
+    """校验密码"""
     return bcrypt.checkpw(bytes(passwd, encoding = "utf8"), hashed)
 
 def utc_timestamp():

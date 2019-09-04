@@ -20,7 +20,7 @@ create_schema = {
         },
         "author_id": {
             "type": "string",
-            "minLength": 1
+            "minLength": 16
         },
         "content": {
             "type": "string"
@@ -28,10 +28,6 @@ create_schema = {
         "status": {
             "type": "integer"
         }
-        # "cid": {
-        #     "type": "string",
-        #     "minLength": 16
-        # }
     },
     "required": ["title", "author_id", "content"]
 }
@@ -46,11 +42,10 @@ def create():
         title=body["title"],
         author_id=body["author_id"],
         content=body["content"],
-        status=body["status"],
-        # cid=body["cid"],
+        status=body["status"]
     ))
 
-    return res
+    return output_json(data=res)
 
 @article_action.route("/article", methods=["GET"])
 def list():
@@ -66,9 +61,9 @@ def list():
     offset = query.get("offset") or 0
     limit = query.get("limit") or 15
     handler = ArticleService()
-    res = handler.list(where, offset, limit)
+    data, count = handler.list(where, offset, limit)
 
-    return res
+    return output_json(data=data, total=count)
 
 @article_action.route("/article/<string:id>", methods=["GET"])
 def show(id):
@@ -77,7 +72,10 @@ def show(id):
         return output_json(code=ErrCode.ERR_PARAMS)
     handler = ArticleService()
     
-    return handler.show(id)
+    flag, data = handler.show(id)
+
+    return output_json(data=data) if flag else output_json(code=ErrCode.NO_DATA)
+
 
 @article_action.route("/article/<string:id>", methods=["PUT"])
 def update(id):
@@ -89,8 +87,16 @@ def update(id):
     if body is None:
         return output_json(code=ErrCode.ERR_PARAMS)
 
+    allowField = ["title", "status", "content"]
+    # 检查更新字段
+    for key in body.keys():
+        if key not in allowField:
+            return output_json(code=ErrCode.ERR_PARAMS)
+
     handler = ArticleService()
-    return handler.update(id, body)
+    res = handler.update(id, body)
+
+    return output_json(code=0) if res else output_json(code=ErrCode.NO_DATA)
 
 @article_action.route("/article/<string:id>", methods=["DELETE"])
 def delArticle(id):
@@ -100,5 +106,5 @@ def delArticle(id):
     handler = ArticleService()
     res = handler.destory(id)
 
-    return res
+    return output_json(code=0) if res else output_json(code=ErrCode.NO_DATA)
     

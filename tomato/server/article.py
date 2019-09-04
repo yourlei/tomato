@@ -9,51 +9,50 @@ from tomato.database.model import Category
 from tomato.database.model import User
 from tomato.utils.utils import md5_id
 from tomato.utils.utils import DELETED_AT
-from tomato.utils.utils import output_json
-from tomato.utils.errCode import ErrCode
+from tomato.server.category_relation import CategoryRelation
 
 class ArticleService():
     def create(self, article: Article):
         """新增文章
         Args:
             article: class, 文章对象
+        :return 
+            返回dict
         """
-        # query = Article.query
-
-        # exist = query.filter(Article.title==article.title, Article.author_id==
-        #     article.author_id, Article.deleted_at==DELETED_AT)\
-        #     .first()
-        # if exist:
-        #     return output_json(code=ErrCode.EXIST_DATA)
-
         article.id = md5_id()
         with db.auto_commit():
             db.session.add(article)
 
-        return output_json(data={"id": article.id, "title": article.title}, code=0)
+        return {"id": article.id, "title": article.title}
     
     def show(self, id: str):
         """文章详情
         Args:
             id: string, 文章ID
+        :return
+            flag: True or False (Not found)
+            data: dict or None
         """
-        # row = Article.query().filter(Article.id==id, Article.deleted_at==DELETED_AT)\
-        #     .first()
-
         row = db.session.query(Article.id, Article.title, User.name, Article.content)\
                 .filter(Article.author_id==User.id)\
                 .filter(Article.id==id, Article.deleted_at==DELETED_AT)\
                 .first()
 
         if row is None:
-            return output_json(code=ErrCode.NO_DATA)
+            return False, None
+        
+        """查询文章分类信息"""
+        category_handler = CategoryRelation()
+        cats = category_handler.getCategory(row[0])
+
         data = {
             "id": row[0],
             "title": row[1],
             "author": row[2],
-            "content": row[3]
+            "content": row[3],
+            "cats": cats
         }
-        return output_json(data=data)
+        return True, data
     
     def update(self, id: str, kwargs: object):
         """编辑文章
@@ -62,21 +61,16 @@ class ArticleService():
             kwargs: object, 更新的属性
               :title:  string
               :status: int
+        Return bool
         """
         row = Article.query.filter_by(id=id)
-        
-        allowField = ["title", "status", "content"]
-        # 检查更新字段
-        for key in kwargs.keys():
-            if key not in allowField:
-                return output_json(code=ErrCode.ERR_PARAMS)
         if row is None:
-            return output_json(code=ErrCode.NO_DATA)
+            return False
 
         with db.auto_commit():
             row.update(kwargs)
 
-        return  output_json(code=0)
+        return  True
     
     def list(self, where: object, offset=0, limit=15):
         """查询列表
@@ -84,6 +78,9 @@ class ArticleService():
             where: object, 查询对象
             offset: int, 分页
             limit:  int, 页长
+        :return
+            data: list, 文章列表
+            count: int, 文章数量
         """
         query = db.session.query(Article.id, Article.title, User.name,\
             Article.created_at)\
@@ -108,9 +105,9 @@ class ArticleService():
                 "created_at": item[3].strftime(DBConfig.DATETIME_FORMAT),
             })
             
-        return output_json(data=data, code=0, total=count)
+        return data, count
 
-    def destory(self, id: str):
+    def destory(self, id: str) -> bool:
         """删除文章
         Args:
             id: string, 文章ID
@@ -118,12 +115,12 @@ class ArticleService():
         row = Article.query.filter_by(id=id)
         
         if row is None:
-            return output_json(code=ErrCode.NO_DATA)
+            return False
 
         with db.auto_commit():
             row.update({"deleted_at": datetime.now()})
 
-        return output_json(code=0)
+        return True
 
 if __name__ == "__main__":
     from tomato.app import app

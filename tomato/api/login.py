@@ -30,6 +30,6 @@ def login():
     validate(body, login_schema)
 
     login_handler = LoginService()
-    res = login_handler.login(**body)
+    code, res = login_handler.login(**body)
 
-    return res
+    return output_json(code=code) if code else output_json(data=res)
