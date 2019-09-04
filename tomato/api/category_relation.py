@@ -27,10 +27,21 @@ relation_schema = {
 def create():
     body = request.json
     
-    validate(body, schema=relation_schema)
+    validate(body, relation_schema)
     handler = CategoryRelation()
     if request.method == "POST":
         res = handler.bindCategory(body.get("name"), body.get("aid"))
     else:
         res = handler.unbindCategory(body.get("name"), body.get("aid"))
-    return res
+    
+    return output_json(code=0) if res else output_json(code=ErrCode.NO_DATA)
+
+@category_relation_action.route("/category/relation/<string:aid>", methods=["GET"])
+def getCategory(aid):
+    if aid is None:
+        return output_json(code=ErrCode.ERR_PARAMS)
+    
+    handler = CategoryRelation()
+    data = handler.getCategory(aid)
+
+    return output_json(data=data)

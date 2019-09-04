@@ -152,7 +152,6 @@ class Article(db.Model):
     title = db.Column(db.String(128), nullable=False, comment="标题")
     author_id  = db.Column(db.String(16), nullable=False, comment="作者ID")
     content = db.Column(db.Text, default="", comment="文章内容")
-    cid = db.Column(db.CHAR(16), default="", comment="分类ID")
     status = db.Column(db.Integer, default=1, comment="文章状态1:已发布, 2:存为草稿")
     # comments = db.relationship('Comments', backref=__tablename__, lazy=True)
     created_at = db.Column(db.DateTime, default=datetime.now, comment="创建时间")
@@ -164,7 +163,6 @@ class Article(db.Model):
         self.author_id = author_id
         self.content = content
         self.status = status
-        # self.cid = cid
 
     def to_dict(self):
         return  {
@@ -212,11 +210,11 @@ class Category_Relationship(db.Model):
     __tablename__ = TB_PREFIX + "category_relationship"
 
     __table_args__ = (
+        # 联合索引
         db.UniqueConstraint('cid', 'aid', name='uix_cid_aid'),
         # db.Index('index_name', 'column', 'column'),
     )
-
-    # id = db.Column(db.CHAR(16), primary_key=True, comment="唯一id")
+    
     id = db.Column(db.Integer, primary_key=True, comment="主键id")
     cid = db.Column(db.CHAR(16), default="", nullable=False, comment="category id")
     aid = db.Column(db.CHAR(16), default="", nullable=False, comment="article id")
@@ -224,7 +222,6 @@ class Category_Relationship(db.Model):
     deleted_at = db.Column(db.DateTime, default=DELETED_AT)
 
     def __init__(self, cid, aid):
-        # self.id = id
         self.cid = cid
         self.aid = aid
 

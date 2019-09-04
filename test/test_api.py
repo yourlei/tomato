@@ -12,11 +12,11 @@ class Test_tomato(unittest.TestCase):
         """登录接口"""
         data = {
             "account": "tomato",
-            "passwd": "tomato5321"
+            "passwd": "tomato123"
         }
-        url = host + "/admin/login"
+        url = host + "/login"
         res = requests.post(url, json=data).json()
-        self.assertEqual(res["code"], 0, res["error"]["msg"])
+        self.assertEqual(res["code"], 0, res["msg"])
     
     def test_user_passwd(self):
         """修改用户密码"""
@@ -26,7 +26,7 @@ class Test_tomato(unittest.TestCase):
         }
         url = host + "/admin/passwd/84320f86496fdcbb"
         res = requests.put(url, json=data).json()
-        self.assertEqual(res["code"], 0, res["error"]["msg"])
+        self.assertEqual(res["code"], 0, res["msg"])
 
     def test_user_create(self):
         """创建用户"""
@@ -38,22 +38,32 @@ class Test_tomato(unittest.TestCase):
         }
         url = host + "/admin/user"
         res = requests.post(url, json=data).json()
-        self.assertEqual(res["code"], 0, res["error"]["msg"])
+        self.assertEqual(res["code"], 0, res["msg"])
 
-    def test_article_create(self):
-        """发布文章"""
-        pass
+    # def test_article_create(self):
+    #     """发布文章"""
+    #     pass
     
     def test_article_index(self):
         url = host + '/admin/article?query={"where":{"title": "linux"}}'
         res = requests.get(url).json()
-        self.assertEqual(res["code"], 0, res["error"]["msg"])
+        self.assertEqual(res["code"], 0, res["msg"])
 
     def test_article_show(self):
         """文章详情"""
         url = host + "/admin/article/4682075a57b34813"
         res = requests.get(url).json()
-        self.assertEqual(res["code"], 0, res["error"]["msg"])
+        self.assertEqual(res["code"], 0, res["msg"])
+
+    def test_categroy_relation_create(self):
+        """文章添加分类"""
+        url = host + "/admin/category/relation"
+        data = {
+            "name": "python",
+            "aid": "11"
+        }
+        res = requests.post(url, json=data).json()
+        self.assertEqual(res["code"], 0, res["msg"])
 
 if __name__ == "__main__":
     unittest.main()
