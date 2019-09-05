@@ -48,4 +48,7 @@ TestConfig = {
 }
 
 api_version = "/api/v1"
-STATICPATH = "static/captcha/"
+# RSA加密方法相关配置
+rsa_public_key = "rsa/rsa_public.pem"
+rsa_private_key = "rsa/rsa_key.bin"
+rsa_secret = "U9$vIk"

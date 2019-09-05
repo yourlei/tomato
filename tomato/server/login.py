@@ -9,6 +9,7 @@ from tomato.utils.errCode import ErrCode
 from tomato.utils.utils import decrypt
 from tomato.utils.utils import DELETED_AT
 from tomato.utils.utils import utc_timestamp
+from tomato.utils.rsa import rsa_decrpyt
 
 class LoginService():
     def login(self, **kwargs: object):
@@ -23,7 +24,13 @@ class LoginService():
         """
         account = kwargs.get("account")
         passwd = kwargs.get("passwd")
-
+        # rsa解密加密字符
+        try:
+            passwd = rsa_decrpyt(passwd)
+        except Exception as e:
+            print(e, "无效的密码")
+            return ErrCode.ERR_PASSWD, None
+        
         query = User.query
         # 邮箱或账户名登录
         if re.search(r'@', account):
