@@ -3,11 +3,12 @@
 import re
 import jwt
 import traceback
+from jsonschema.exceptions import ValidationError
 from flask import request
 from tomato.app import app
+from tomato.setting import DEBUG
 from tomato.utils.errCode import ErrCode
 from tomato.utils.utils  import output_json
-from jsonschema.exceptions import ValidationError
 
 @app.route("/", methods=["GET"])
 def home():
@@ -16,13 +17,13 @@ def home():
 @app.errorhandler(ValidationError)
 def handle_bad_request(e):
     """处理全局异常参数请求"""
-    if app.config.get("DEBUG"):
+    if DEBUG:
         print(traceback.format_exc())
     return output_json(code=ErrCode.ERR_PARAMS), 400
 
 @app.errorhandler(Exception)
 def handle_inner_error(e):
-    if app.config.get("DEBUG"):
+    if DEBUG:
         print(traceback.format_exc())
     return output_json(code=ErrCode.INNERERR), 200
 
