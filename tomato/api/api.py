@@ -32,18 +32,18 @@ def require_token():
     """验证token"""
     pathname = request.path
     # 权限受控接口
-    # if not app.config["DEBUG"]:
-    if -1 != pathname.find("admin"):
-        headers = request.headers
-        origin = headers.get("Origin")
-        token = headers.get("Token")
-        
-        if token is None:
-            return output_json(code=ErrCode.HEADER_ERR)
-        # 验证token
-        try:
-            payload = jwt.decode(token, app.config["JWT_SECRET"], algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            return output_json(code=ErrCode.NO_AUTH), 401
-        except jwt.InvalidTokenError:
-            return output_json(code=ErrCode.NO_AUTH), 401
+    if not app.config["DEBUG"]:
+        if -1 != pathname.find("admin"):
+            headers = request.headers
+            origin = headers.get("Origin")
+            token = headers.get("Token")
+            
+            if token is None:
+                return output_json(code=ErrCode.HEADER_ERR)
+            # 验证token
+            try:
+                payload = jwt.decode(token, app.config["JWT_SECRET"], algorithms=['HS256'])
+            except jwt.ExpiredSignatureError:
+                return output_json(code=ErrCode.NO_AUTH), 401
+            except jwt.InvalidTokenError:
+                return output_json(code=ErrCode.NO_AUTH), 401
