@@ -36,7 +36,7 @@ class LogFileHandler(TimedRotatingFileHandler):
                 else:
                     addend = -3600
                 timeTuple = time.localtime(t + addend)
-        dfn = self.rotation_filename(os.path.dirname(self.baseFilename) +'/'+time.strftime(self.suffix, timeTuple))
+        dfn = self.rotation_filename(os.path.dirname(self.baseFilename) +'/'+time.strftime(self.suffix, timeTuple)+'.log')
 
         if os.path.exists(dfn):
             os.remove(dfn)

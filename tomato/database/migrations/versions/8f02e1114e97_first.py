@@ -1,8 +1,8 @@
 """first
 
-Revision ID: 908a9b19e751
+Revision ID: 8f02e1114e97
 Revises: 
-Create Date: 2019-09-02 11:20:11.690508
+Create Date: 2019-09-06 06:58:52.421578
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '908a9b19e751'
+revision = '8f02e1114e97'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,7 +23,6 @@ def upgrade():
     sa.Column('title', sa.String(length=128), nullable=False, comment='标题'),
     sa.Column('author_id', sa.String(length=16), nullable=False, comment='作者ID'),
     sa.Column('content', sa.Text(), nullable=True, comment='文章内容'),
-    sa.Column('cid', sa.CHAR(length=16), nullable=True, comment='分类ID'),
     sa.Column('status', sa.Integer(), nullable=True, comment='文章状态1:已发布, 2:存为草稿'),
     sa.Column('created_at', sa.DateTime(), nullable=True, comment='创建时间'),
     sa.Column('updated_at', sa.DateTime(), nullable=True, comment='更新时间'),
@@ -39,10 +38,13 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('tomato_category_relationship',
-    sa.Column('id', sa.CHAR(length=16), nullable=False, comment='唯一id'),
+    sa.Column('id', sa.Integer(), nullable=False, comment='主键id'),
     sa.Column('cid', sa.CHAR(length=16), nullable=False, comment='category id'),
     sa.Column('aid', sa.CHAR(length=16), nullable=False, comment='article id'),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('updated_at', sa.DateTime(), nullable=True, comment='更新时间'),
+    sa.Column('deleted_at', sa.DateTime(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('cid', 'aid', name='uix_cid_aid')
     )
     op.create_table('tomato_menu',
     sa.Column('id', sa.CHAR(length=16), nullable=False, comment='唯一id'),
@@ -88,7 +90,7 @@ def upgrade():
     sa.Column('password', sa.String(length=128), nullable=False, comment='账户密码'),
     sa.Column('created_at', sa.DateTime(), nullable=True, comment='创建时间'),
     sa.Column('updated_at', sa.DateTime(), nullable=True, comment='更新时间'),
-    sa.Column('deleted_at', sa.DateTime(), nullable=True),
+    sa.Column('deleted_at', sa.DateTime(), nullable=True, comment='软删除标志位'),
     sa.ForeignKeyConstraint(['role_id'], ['tomato_role.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
